@@ -4,7 +4,6 @@ This is a simple Dapp called "The Flat Dapp"
 
 The Dapp can be accessed by visiting https://zaxemo.000webhostapp.com/dapp/index.html
 
-Fields:
 
 Flat Number: This is the flat number where the current resident resides.
 
