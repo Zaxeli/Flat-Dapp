@@ -6,7 +6,7 @@ The Dapp can be accessed by visiting https://zaxemo.000webhostapp.com/dapp/index
 
 Fields:
 
-Flat Number: This is the flat nuumber where the current resident resides.
+Flat Number: This is the flat number where the current resident resides.
 Resident Name: This is the name of the current resident residing at the flat.
 
 Update Resident:
