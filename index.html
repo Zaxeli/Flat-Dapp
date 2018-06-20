@@ -45,9 +45,7 @@
     } else {
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545/"));
     }
-
     web3.eth.defaultAccount = web3.eth.accounts[0];
-
     var FlatContract = web3.eth.contract([
 	{
 		"anonymous": false,
@@ -93,20 +91,6 @@
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "flatNum",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
 		"name": "getResident",
 		"outputs": [
 			{
@@ -121,28 +105,11 @@
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "resident",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
 	}
 ]);
-
-var Flat = FlatContract.at('0x1ccc05ac65c49fe0d3554609cbf36118486d2379');
+var Flat = FlatContract.at('0x62feefc8762fbaa328c1666be8f0a38e5e8c362f');
 console.log(Flat);
-
 var ResidentEvent = Flat.ResidentEvent({}, 'latest');
-
 ResidentEvent.watch(function(err,res) {
     if(!err) {
         $("#display").html("Resident: "+web3.toAscii(res.args.resident)+"<br>Flat: "+res.args.flatNum);
@@ -152,7 +119,6 @@ ResidentEvent.watch(function(err,res) {
         $("#loader").hide();
     }
 });
-
 $("#update").click(function() {
     $("#loader").show();
     Flat.setResident($("#flatNum").val(),$("#resident").val(),function(err,res) {
