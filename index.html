@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Flat Dapp</title>
+    
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script src="/node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+
+<body>
+    
+    <div class="container">
+    
+        <h1>The Flat Dapp</h1>
+        <label id="display"></label>
+        <span id="blockHash"></span>
+        <hr>
+        <img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">
+        <br>
+
+        <label>Flat number</label><br>
+        <input id="flatNum" type="text" />
+
+        <br>
+
+        <label>Resident Name</label><br>
+        <input id="resident" type="text" />
+
+        <br>
+
+        <button id="update">Update Resident</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+    if (typeof web3 !== 'undefined') {
+        web3 = new Web3(web3.currentProvider);
+    } else {
+        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545/"));
+    }
+
+    web3.eth.defaultAccount = web3.eth.accounts[0];
+
+    var FlatContract = web3.eth.contract([
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "flatNum",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "resident",
+				"type": "bytes32"
+			}
+		],
+		"name": "ResidentEvent",
+		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_flatNum",
+				"type": "uint256"
+			},
+			{
+				"name": "_resident",
+				"type": "bytes32"
+			}
+		],
+		"name": "setResident",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "flatNum",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getResident",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "resident",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]);
+
+var Flat = FlatContract.at('0x1ccc05ac65c49fe0d3554609cbf36118486d2379');
+console.log(Flat);
+
+var ResidentEvent = Flat.ResidentEvent({}, 'latest');
+
+ResidentEvent.watch(function(err,res) {
+    if(!err) {
+        $("#display").html("Resident: "+web3.toAscii(res.args.resident)+"<br>Flat: "+res.args.flatNum);
+        $("#loader").hide();
+    } else {
+        console.log(err);
+        $("#loader").hide();
+    }
+});
+
+$("#update").click(function() {
+    $("#loader").show();
+    Flat.setResident($("#flatNum").val(),$("#resident").val(),function(err,res) {
+        if(err) {
+            //console.log(err);
+            //$("#loader").hide();
+        }
+    });
+});
+    </script>
+
+</body>
+
+</html>
